@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>RxJS-Demo</title>
+</head>
+
+<body>
+  <script src="https://unpkg.com/@reactivex/rxjs@5.4.0/dist/global/Rx.js"></script>
+  <ul id="information">
+  </ul>
+
+  <script>
+    const promise = new Promise(resolve => {
+      const information = {
+        name: "@reactivex/rxjs",
+        version: "5.4.0",
+        description: "Reactive Extensions for modern JavaScript",
+      }
+      setTimeout(() => resolve(information), 1000)
+    })
+
+    const informationEl = document.querySelector('#information')
+    Rx.Observable.fromPromise(promise)
+      .subscribe(data => {
+        Object.keys(data).forEach(key => {
+          const listEl = document.createElement('li')
+          listEl.textContent = `${key}: ${data[key]}`
+          informationEl.appendChild(listEl)
+        })
+      })
+  </script>
+</body>
+</html>
