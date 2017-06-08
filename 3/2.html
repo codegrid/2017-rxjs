@@ -9,7 +9,7 @@
 <body>
   <script src="https://unpkg.com/@reactivex/rxjs@5.4.0/dist/global/Rx.js"></script>
   <div style="position: fixed">
-    <p>スクロール位置が500より大きく、1000より小さいときだけ、背景色が変化します。</p>
+    <p>スクロール変化は500ミリ秒に1回だけ有効となり、背景色が変わります。</p>
     <p>スクロール位置：<span id="result"></span></p>
   </div>
   <div id="scrollableEl" style="height: 5000px"></div>
@@ -18,12 +18,7 @@
     const resultEl = document.querySelector('#result')
     Rx.Observable
       .fromEvent(document, 'scroll')
-      .filter(ev => {
-        return ev.target.body.scrollTop > 500
-      })
-      .filter(ev => {
-        return 1000 > ev.target.body.scrollTop
-      })
+      .throttleTime(500)
       .subscribe(ev => {
         resultEl.textContent = ev.target.body.scrollTop
         const alpha = ev.target.body.scrollTop / 5000

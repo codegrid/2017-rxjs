@@ -4,25 +4,47 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width">
   <title>RxJS-Demo</title>
+  <style>
+  body {
+    background: red;
+  }
+  #box {
+    background: orange;
+    position: absolute;
+    left: 10px;
+    top: 10px;
+  }
+  .text {
+    position: relative;
+  }
+  </style>
 </head>
 
 <body>
   <script src="https://unpkg.com/@reactivex/rxjs@5.4.0/dist/global/Rx.js"></script>
-  <div style="position: fixed">
-    <p>スクロール変化は500ミリ秒に1回だけ有効となり、背景色が変わります。</p>
-    <p>スクロール位置：<span id="result"></span></p>
-  </div>
-  <div id="scrollableEl" style="height: 5000px"></div>
+  <div id="box"></div>
+  <span class="text">ウインドウのサイズを変えてsubscribeが実行されるたびに数字が増えます（別タブで開いてください）</span>
+  <span class="text">subscribeの実行回数：</span><span class="text" id="count"></span>
 
   <script>
-    const resultEl = document.querySelector('#result')
+    const boxEl = document.querySelector('#box')
+    const countEl = document.querySelector('#count')
+    countEl.textContent = 1
+
+    const render = () => {
+      const w = window.innerWidth - 20
+      const h = window.innerHeight - 20
+      boxEl.style.width = `${w}px`
+      boxEl.style.height = `${h}px`
+    }
+    render()
+
     Rx.Observable
-      .fromEvent(document, 'scroll')
+      .fromEvent(window, 'resize')
       .throttleTime(500)
       .subscribe(ev => {
-        resultEl.textContent = ev.target.body.scrollTop
-        const alpha = ev.target.body.scrollTop / 5000
-        ev.target.body.style.background = `rgba(0, 0, 128, ${alpha})`
+        countEl.textContent = parseInt(countEl.textContent, 10) + 1
+        render()
       })
   </script>
 </body>

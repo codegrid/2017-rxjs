@@ -7,30 +7,25 @@
 </head>
 
 <body>
-  <style>
-  .hide {
-    display: none;
-  }
-  .suggestion {
-    width: 200px;
-    border: 1px solid #999;
-    margin-top: 10px;
-    padding: 1em;
-    box-shadow: 2px 2px 2px rgba(100, 100, 100, .5);
-  }
-  </style>
   <script src="https://unpkg.com/@reactivex/rxjs@5.4.0/dist/global/Rx.js"></script>
-  <input type="text" id="input"><button>検索</button>
-  <div id="suggestion" class="suggestion hide">少し遅れて出てくる<br>検索ワードの候補</div>
+  <div style="position: fixed">
+    <p>スクロール位置が1000より小さいとき、かつ100ミリ秒に1度、背景色が変化します。</p>
+    <p>スクロール位置：<span id="result"></span></p>
+  </div>
+  <div id="scrollableEl" style="height: 5000px"></div>
 
   <script>
-    const inputEl = document.querySelector('#input')
-    const suggestionEl = document.querySelector('#suggestion')
+    const resultEl = document.querySelector('#result')
     Rx.Observable
-      .fromEvent(inputEl, 'keydown')
-      .debounceTime(500)
+      .fromEvent(document, 'scroll')
+      .filter(ev => {
+        return ev.target.body.scrollTop < 1000
+      })
+      .throttleTime(100)
       .subscribe(ev => {
-        suggestionEl.classList.remove('hide')
+        resultEl.textContent = ev.target.body.scrollTop
+        const alpha = ev.target.body.scrollTop / 5000
+        ev.target.body.style.background = `rgba(0, 0, 128, ${alpha})`
       })
   </script>
 </body>
