@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>RxJS-Demo</title>
+  <style>
+  body {
+    background: red;
+  }
+  #box {
+    background: orange;
+    position: absolute;
+    left: 10px;
+    top: 10px;
+  }
+  .text {
+    position: relative;
+  }
+  </style>
+</head>
+
+<body>
+  <script src="https://unpkg.com/@reactivex/rxjs@5.4.0/dist/global/Rx.js"></script>
+  <div id="box"></div>
+  <span class="text">ウインドウのサイズを変えてsubscribeが実行されるたびに数字が増えます（別タブで開いてください）</span>
+  <span class="text">subscribeの実行回数：</span><span class="text" id="count"></span>
+
+  <script>
+    const boxEl = document.querySelector('#box')
+    const countEl = document.querySelector('#count')
+    countEl.textContent = 1
+
+    const render = () => {
+      const w = window.innerWidth - 20
+      const h = window.innerHeight - 20
+      boxEl.style.width = `${w}px`
+      boxEl.style.height = `${h}px`
+    }
+    render()
+
+    Rx.Observable
+      .fromEvent(window, 'resize')
+      .throttleTime(500)
+      .subscribe(ev => {
+        countEl.textContent = parseInt(countEl.textContent, 10) + 1
+        render()
+      })
+  </script>
+</body>
+</html>
