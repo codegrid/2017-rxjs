@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>RxJS-Demo</title>
+  <style>
+  p {
+    font-size: 2em;
+  }
+  </style>
+</head>
+
+<body>
+  <script src="https://unpkg.com/@reactivex/rxjs@5.4.0/dist/global/Rx.js"></script>
+  <ul id="information">
+  </ul>
+
+  <script>
+    const informationEl = document.querySelector('#information')
+    Rx.Observable
+      .fromPromise(fetch('./sample.json'))
+      .subscribe(res => {
+        res.json()
+          .then(json => {
+            Object.keys(json).forEach(key => {
+              const listEl = document.createElement('li')
+              listEl.textContent = `${key}: ${json[key]}`
+              informationEl.appendChild(listEl)
+            })
+          })
+      })
+  </script>
+</body>
+</html>

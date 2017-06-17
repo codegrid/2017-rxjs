@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>RxJS-Demo</title>
+  <style>
+  #point {
+    position: fixed;
+    width: 20px;
+    height: 20px;
+    border-radius: 20px;
+    background: red;
+  }
+  </style>
+</head>
+
+<body>
+  <script src="https://unpkg.com/@reactivex/rxjs@5.4.0/dist/global/Rx.js"></script>
+  <p>map()オペレータを使わない例。マウスカーソルの位置に赤い点が描画されます。</p>
+  <div id="point"></div>
+
+  <script>
+    const pointEl = document.querySelector('#point')
+    Rx.Observable
+      .fromEvent(document, 'mousemove')
+      .subscribe(ev => {
+        pointEl.style.left = `${ev.clientX}px`
+        pointEl.style.top  = `${ev.clientY}px`
+      })
+  </script>
+</body>
+</html>

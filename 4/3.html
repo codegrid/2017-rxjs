@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>RxJS-Demo</title>
+  <style>
+  p {
+    font-size: 2em;
+  }
+  </style>
+</head>
+
+<body>
+  <script src="https://unpkg.com/@reactivex/rxjs@5.4.0/dist/global/Rx.js"></script>
+  <button id="button">Button</button>
+  <p>Shiftキーを押しながらクリックするとtrueになります</p>
+  <p><span id="result"></span></p>
+
+  <script>
+    const resultEl = document.querySelector('#result')
+    const buttonEl = document.querySelector('#button')
+
+    Rx.Observable
+      .fromEvent(buttonEl, 'click')
+      .startWith([])
+      .scan((result, ev) => {
+        result.push(ev.shiftKey)
+        return result
+      })
+      .subscribe(result => {
+        resultEl.textContent = result.join(', ')
+      })
+  </script>
+</body>
+</html>
